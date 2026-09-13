@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="记录晨重并观察7日平均趋势的减脂进度页面。">
+  <title>进度记录｜刚刚好的减脂计划</title>
+  <link rel="stylesheet" href="styles.css"><script defer src="script.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header"><div class="nav-wrap"><a class="brand" href="index.html"><span class="brand-mark">好</span><span>刚刚好计划</span></a><button class="nav-toggle" type="button" aria-expanded="false" aria-controls="siteNav">菜单</button><nav class="site-nav" id="siteNav" aria-label="主导航"><a href="index.html">首页</a><a href="diet.html">饮食</a><a href="workout.html">训练</a><a href="progress.html" aria-current="page">进度</a><a href="takeout.html">外卖</a><a href="ai-food.html">AI 识餐</a></nav></div></header>
+  <main id="main">
+    <section class="hero"><span class="eyebrow">Trend, not noise</span><h1 class="page-title">看趋势，<br>不纠结单日。</h1><p class="lede">晨起空腹称重，数据只留在本机。</p></section>
+
+    <section class="grid grid-4" aria-label="进度摘要">
+      <article class="card metric-card"><span class="metric-label">最新体重</span><strong class="metric-value" id="currentWeight">63.0 kg</strong><span class="metric-note">起点 63 kg</span></article>
+      <article class="card metric-card"><span class="metric-label">距离目标</span><strong class="metric-value" id="remainingWeight">8.0 kg</strong><span class="metric-note">目标 55 kg</span></article>
+      <article class="card metric-card"><span class="metric-label">最近 7 次均值</span><strong class="metric-value" id="sevenDayAvg">—</strong><span class="metric-note">过滤水分噪音</span></article>
+      <article class="card metric-card"><span class="metric-label">目标完成</span><strong class="metric-value" id="weightProgress">0%</strong><span class="metric-note">到 55 kg 的进度</span></article>
+    </section>
+
+    <section class="section grid grid-2">
+      <article class="card">
+        <div class="section-head"><div><span class="eyebrow">晨重记录</span><h2>加一条数据</h2></div></div>
+        <form class="form-row" id="weightForm">
+          <label class="field">日期<input id="weightDate" type="date" required></label>
+          <label class="field">体重（kg）<input id="weightValue" type="number" min="40" max="100" step="0.1" placeholder="例如 62.6" required></label>
+          <button class="button" type="submit">保存</button>
+        </form>
+        <p class="metric-note" style="margin-top:12px">同一天再次保存会更新原记录。</p>
+        <div class="log-list" id="weightLogList" aria-live="polite"></div>
+      </article>
+      <article class="card">
+        <div class="section-head"><div><span class="eyebrow">最近 30 条</span><h2>体重趋势</h2></div></div>
+        <div class="chart-wrap"><canvas id="weightChart" aria-label="体重变化折线图"></canvas><div class="empty-state" id="chartEmpty"><p>保存第一条晨重后，<br>这里会出现趋势图。</p></div></div>
+      </article>
+    </section>
+
+    <section class="section card accent"><span class="eyebrow">趋势解读</span><h2>现在该怎么做？</h2><p class="insight" id="trendInsight">记录 7 次左右后，这里会用均值帮你过滤单日波动。</p></section>
+
+    <section class="section" aria-labelledby="rules-title">
+      <div class="section-head"><div><span class="eyebrow">调整规则</span><h2 id="rules-title">至少看满 2–3 周再动</h2></div><p>经期、盐分、碳水、睡眠和便秘都可能让体重短期变化 1–2 kg。</p></div>
+      <div class="grid grid-3">
+        <article class="card"><span class="rating">正合适</span><h3 style="margin-top:16px">每周下降 0.2–0.6 kg</h3><p class="metric-note">继续当前热量、步数与训练，不做调整。</p></article>
+        <article class="card peach"><span class="rating">有点快</span><h3 style="margin-top:16px">超过 0.7 kg / 周</h3><p class="metric-note">若明显饿或训练力量下降，每天增加 100–150 kcal。</p></article>
+        <article class="card"><span class="rating">平台期</span><h3 style="margin-top:16px">连续 2–3 周几乎不降</h3><p class="metric-note">先查漏算；执行稳定后，每天少 100–150 kcal，或增加 1500–2000 步，二选一。</p></article>
+      </div>
+    </section>
+    <div class="hero-actions"><a class="button" href="index.html">回到今日打卡</a><a class="button secondary" href="takeout.html">计划下一顿</a></div>
+  </main>
+  <footer class="site-footer"><div class="footer-wrap"><span>刚刚好计划 · 你要观察的是趋势，不是审判自己</span><div class="footer-links"><a href="index.html">首页</a><a href="diet.html">饮食</a><a href="workout.html">训练</a></div></div></footer>
+</body>
+</html>

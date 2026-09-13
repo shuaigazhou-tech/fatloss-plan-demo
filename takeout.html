@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="适合学校生活的减脂外卖选择与点单备注。">
+  <title>外卖选择｜刚刚好的减脂计划</title>
+  <link rel="stylesheet" href="styles.css"><script defer src="script.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header"><div class="nav-wrap"><a class="brand" href="index.html"><span class="brand-mark">好</span><span>刚刚好计划</span></a><button class="nav-toggle" type="button" aria-expanded="false" aria-controls="siteNav">菜单</button><nav class="site-nav" id="siteNav" aria-label="主导航"><a href="index.html">首页</a><a href="diet.html">饮食</a><a href="workout.html">训练</a><a href="progress.html">进度</a><a href="takeout.html" aria-current="page">外卖</a><a href="ai-food.html">AI 识餐</a></nav></div></header>
+  <main id="main">
+    <section class="hero"><span class="eyebrow">Takeout, made easier</span><h1 class="page-title">外卖照点，<br>学会搭配。</h1><p class="lede">先蛋白质，再蔬菜，最后看主食和酱汁。</p><div class="hero-actions"><a class="button" href="ai-food.html">📷 拍照识餐</a></div></section>
+
+    <section class="section card accent">
+      <div class="section-head"><div><span class="eyebrow">快速筛选</span><h2>今天想吃哪一类？</h2></div><p>热量区间是基于常见份量的粗略估算，商家用油和实际克重会造成差异。</p></div>
+      <div class="filter-bar" aria-label="外卖类型筛选"><button class="active" type="button" data-filter="全部">全部</button><button type="button" data-filter="热汤">热汤</button><button type="button" data-filter="米饭">米饭</button><button type="button" data-filter="轻食">轻食</button><button type="button" data-filter="日料">日料</button><button type="button" data-filter="便利店">便利店</button></div>
+    </section>
+
+    <section class="section grid grid-3" id="takeoutGrid">
+      <article class="card takeout-card" data-category="热汤"><div class="takeout-top"><div class="icon-box">🍲</div><span class="rating">优先推荐</span></div><h2>麻辣烫 / 冒菜</h2><p>肉 / 虾 / 蛋 + 豆腐 + 多种菜 + 小份主食。</p><div class="order-note">少油少盐，汤底清淡一点，谢谢。</div><button class="button ghost small" type="button" data-copy="少油少盐，汤底清淡一点，谢谢。">复制备注</button></article>
+
+      <article class="card takeout-card" data-category="米饭"><div class="takeout-top"><div class="icon-box">🍚</div><span class="rating">省心选择</span></div><h2>鸡腿饭 / 牛肉饭</h2><p>去皮肉类 + 两份菜 + 半份到一份米饭。</p><div class="order-note">米饭半份、少油少酱，多加青菜，谢谢。</div><button class="button ghost small" type="button" data-copy="米饭半份、少油少酱，多加青菜，谢谢。">复制备注</button></article>
+
+      <article class="card takeout-card" data-category="轻食"><div class="takeout-top"><div class="icon-box">🥗</div><span class="rating">注意酱料</span></div><h2>轻食碗 / 沙拉</h2><p>肉 / 虾 + 一份碳水 + 大量蔬菜。</p><div class="order-note">酱料单独放，不要额外淋油，谢谢。</div><button class="button ghost small" type="button" data-copy="酱料单独放，不要额外淋油，谢谢。">复制备注</button></article>
+
+      <article class="card takeout-card" data-category="日料"><div class="takeout-top"><div class="icon-box">🍣</div><span class="rating">控制寿司量</span></div><h2>日料</h2><p>刺身 / 烤鱼 + 适量寿司 + 沙拉。</p><div class="order-note">沙拉酱单独放，少酱油，谢谢。</div><button class="button ghost small" type="button" data-copy="沙拉酱单独放，少酱油，谢谢。">复制备注</button></article>
+
+      <article class="card takeout-card" data-category="便利店"><div class="takeout-top"><div class="icon-box">🏪</div><span class="rating">赶课救急</span></div><h2>便利店组合</h2><p>无糖奶 / 豆浆 + 2 个蛋 + 主食 + 水果。</p><div class="order-note">奶 + 蛋 + 主食 + 水果。</div><button class="button ghost small" type="button" data-copy="便利店组合：无糖牛奶或豆浆 + 2个蛋 + 1份主食 + 1份水果。">复制清单</button></article>
+
+      <article class="card takeout-card" data-category="热汤"><div class="takeout-top"><div class="icon-box">🥣</div><span class="rating">暖胃备选</span></div><h2>粥 / 汤粉</h2><p>瘦肉 / 牛肉 + 鸡蛋 + 青菜 + 常规主食。</p><div class="order-note">加青菜和一个蛋，少油少汤，谢谢。</div><button class="button ghost small" type="button" data-copy="加青菜和一个蛋，少油少汤，谢谢。">复制备注</button></article>
+    </section>
+
+    <section class="section grid grid-2"><article class="card dark"><span class="eyebrow">三步判断</span><h2>蛋白质 + 两份菜</h2><p style="color:rgba(255,255,255,.65)">主食留一份，油和酱少一点。</p></article><article class="card peach"><span class="eyebrow">奶茶也能留</span><h2>小杯、少糖、去奶盖</h2><p>每周 1–2 次，算进当天加餐。</p></article></section>
+    <div class="hero-actions"><a class="button" href="diet.html">回到全天饮食 →</a><a class="button secondary" href="progress.html">记录今日晨重</a></div>
+  </main>
+  <footer class="site-footer"><div class="footer-wrap"><span>刚刚好计划 · 外卖是生活方式，不是减脂障碍</span><div class="footer-links"><a href="index.html">首页</a><a href="diet.html">饮食</a><a href="workout.html">训练</a><a href="progress.html">进度</a></div></div></footer>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="1500–1600 kcal 学校外卖友好减脂饮食方案。">
+  <title>饮食安排｜刚刚好的减脂计划</title>
+  <link rel="stylesheet" href="styles.css"><script defer src="script.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header"><div class="nav-wrap"><a class="brand" href="index.html"><span class="brand-mark">好</span><span>刚刚好计划</span></a><button class="nav-toggle" type="button" aria-expanded="false" aria-controls="siteNav">菜单</button><nav class="site-nav" id="siteNav" aria-label="主导航"><a href="index.html">首页</a><a href="diet.html" aria-current="page">饮食</a><a href="workout.html">训练</a><a href="progress.html">进度</a><a href="takeout.html">外卖</a><a href="ai-food.html">AI 识餐</a></nav></div></header>
+  <main id="main">
+    <section class="hero"><span class="eyebrow">Diet · 1500–1600 kcal</span><h1 class="page-title">不用戒外卖，<br>搭得刚刚好。</h1><p class="lede">守住热量和蛋白质，主食照常吃。</p></section>
+
+    <section class="section grid grid-2">
+      <div class="plate-visual" role="img" aria-label="餐盘的一半是蔬菜，四分之一蛋白质，四分之一主食"><div class="plate-center">2 + 1 + 1<br><span class="metric-note">外卖配餐法</span></div></div>
+      <article class="card">
+        <span class="eyebrow">每顿正餐</span><h2>两份菜，一份肉，一份饭</h2>
+        <div class="grid grid-2">
+          <div><strong>2 份蔬菜</strong><p class="metric-note">叶菜、菌菇、番茄、冬瓜等，尽量 ≥ 500 g/天。</p></div>
+          <div><strong>1 份蛋白质</strong><p class="metric-note">约 150 g 鸡、牛、鱼、虾，或豆腐与鸡蛋组合。</p></div>
+          <div><strong>1 份主食</strong><p class="metric-note">半份到一份米饭，也可以是玉米、红薯或面。</p></div>
+          <div><strong>少一点酱油</strong><p class="metric-note">备注少油少酱，酱汁单放，是最省力的控热量方法。</p></div>
+        </div>
+      </article>
+    </section>
+
+    <section class="section" aria-labelledby="day-title">
+      <div class="section-head"><div><span class="eyebrow">一天模板</span><h2 id="day-title">四餐简单分</h2></div></div>
+      <div class="meal-grid">
+        <article class="card meal"><span class="metric-label">08:00 · 早餐</span><h3>奶 / 豆浆 + 2 蛋 + 主食</h3><div class="kcal">300–350 kcal</div><p class="metric-note">例：牛奶 250 ml、鸡蛋 2 个、玉米 1 根。</p></article>
+        <article class="card meal"><span class="metric-label">12:00 · 午餐</span><h3>肉类 + 双份菜 + 米饭</h3><div class="kcal">450–550 kcal</div><p class="metric-note">例：去皮鸡腿、两份青菜、半份米饭。</p></article>
+        <article class="card meal"><span class="metric-label">16:00 · 加餐</span><h3>蛋白质或水果二选一</h3><div class="kcal">100–200 kcal</div><p class="metric-note">酸奶、牛奶、水果、茶叶蛋或少量坚果。</p></article>
+        <article class="card meal"><span class="metric-label">19:00 · 晚餐</span><h3>高蛋白 + 菜 + 少量主食</h3><div class="kcal">400–500 kcal</div><p class="metric-note">晚餐也可以吃碳水，不必空腹睡觉。</p></article>
+      </div>
+    </section>
+
+    <section class="section grid grid-2">
+      <article class="card accent">
+        <span class="eyebrow">互动分配器</span><h2>把今天的热量分一分</h2>
+        <div class="range-row"><label for="breakfast">早餐</label><input class="macro-slider" id="breakfast" type="range" min="200" max="500" step="50" value="300"><output data-output="breakfast">300 kcal</output></div>
+        <div class="range-row"><label for="lunch">午餐</label><input class="macro-slider" id="lunch" type="range" min="350" max="700" step="50" value="500"><output data-output="lunch">500 kcal</output></div>
+        <div class="range-row"><label for="snack">加餐</label><input class="macro-slider" id="snack" type="range" min="0" max="300" step="50" value="200"><output data-output="snack">200 kcal</output></div>
+        <div class="range-row"><label for="dinner">晚餐</label><input class="macro-slider" id="dinner" type="range" min="350" max="700" step="50" value="500"><output data-output="dinner">500 kcal</output></div>
+      </article>
+      <article class="card dark"><span class="metric-label" style="color:rgba(255,255,255,.65)">今日合计</span><div class="macro-result" id="mealTotal">1500 kcal</div><p id="mealNote">刚好落在你的起始区间。</p><hr style="border:0;border-top:1px solid rgba(255,255,255,.15);margin:24px 0"><p><strong>营养参考：</strong><br>蛋白质 105–120 g<br>脂肪 45–55 g<br>碳水约 150–180 g</p><p style="color:rgba(255,255,255,.65);font-size:.82rem">碳水和脂肪不必每天卡得很死，优先守住总热量与蛋白质。</p></article>
+    </section>
+
+    <section class="section grid grid-2"><article class="card"><h2>便利店公式</h2><p>奶 / 豆浆 + 2 个蛋 + 1 份主食 + 水果。</p></article><article class="card peach"><h2>小心隐形热量</h2><p>甜饮、酱料、坚果和炸物。奶茶选小杯少糖、去奶盖。</p></article></section>
+
+    <div class="hero-actions"><a class="button" href="takeout.html">打开外卖选择器 →</a><a class="button secondary" href="workout.html">接着看训练</a></div>
+  </main>
+  <footer class="site-footer"><div class="footer-wrap"><span>刚刚好计划 · 饮食不是考试，稳定比满分重要</span><div class="footer-links"><a href="index.html">首页</a><a href="workout.html">训练</a><a href="progress.html">进度</a></div></div></footer>
+</body>
+</html>

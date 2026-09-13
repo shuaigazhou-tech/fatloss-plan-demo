@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="为24岁、160cm、63kg女性定制的学校外卖友好型减脂计划。">
+  <title>刚刚好的减脂计划｜首页</title>
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="script.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header">
+    <div class="nav-wrap">
+      <a class="brand" href="index.html"><span class="brand-mark">好</span><span>刚刚好计划</span></a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="siteNav">菜单</button>
+      <nav class="site-nav" id="siteNav" aria-label="主导航">
+        <a href="index.html" aria-current="page">首页</a>
+        <a href="diet.html">饮食</a>
+        <a href="workout.html">训练</a>
+        <a href="progress.html">进度</a>
+        <a href="takeout.html">外卖</a>
+        <a href="ai-food.html">AI 识餐</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero hero-grid">
+      <div>
+        <span class="eyebrow">Campus fat-loss guide</span>
+        <h1>慢慢来，<br>瘦得刚刚好。</h1>
+        <p class="lede">外卖友好，保肌优先。吃够、练好、慢慢瘦。</p>
+        <div class="profile-strip" aria-label="个人资料">
+          <span class="chip">女 · 24岁</span><span class="chip">160 cm</span><span class="chip">63 → 55 kg</span><span class="chip">久坐</span><span class="chip">每周训练 3–5 次</span><span class="chip">1 年经验 · 无伤病</span>
+        </div>
+        <div class="hero-actions">
+          <a class="button" href="ai-food.html">📷 AI 拍照识餐</a>
+          <a class="button secondary" href="progress.html">记录晨重</a>
+        </div>
+      </div>
+      <aside class="goal-card" aria-label="体重目标">
+        <div><small>你的长期目标</small><div class="goal-number">63<span class="goal-arrow">→</span>55</div><div>kg</div></div>
+        <div>
+          <div class="goal-track" aria-hidden="true"><span></span></div>
+          <small>第一站：8–12 周到 58–59 kg，再重新评估</small>
+        </div>
+      </aside>
+    </section>
+
+    <section class="section" aria-labelledby="numbers-title">
+      <div class="section-head"><div><span class="eyebrow">今日仪表盘</span><h2 id="numbers-title">今天吃得怎么样？</h2></div><span class="chip" id="dashboardDate">今天</span></div>
+      <div class="daily-summary">
+        <article class="card nutrient-card">
+          <div class="nutrient-top"><div><span class="metric-label">热量</span><div><strong class="nutrient-value" id="todayCalories">0</strong> <span class="nutrient-unit">/ 1550 kcal</span></div></div><strong id="caloriePercent">0%</strong></div>
+          <div class="nutrient-bar"><span id="calorieBar"></span></div>
+          <span class="metric-note" id="calorieRemain">今天还可安排约 1550 kcal</span>
+        </article>
+        <article class="card nutrient-card">
+          <div class="nutrient-top"><div><span class="metric-label">蛋白质</span><div><strong class="nutrient-value" id="todayProtein">0</strong> <span class="nutrient-unit">/ 110 g</span></div></div><strong id="proteinPercent">0%</strong></div>
+          <div class="nutrient-bar peach"><span id="proteinBar"></span></div>
+          <span class="metric-note" id="proteinRemain">今天还差约 110 g</span>
+        </article>
+        <article class="card dark advice-card">
+          <div><span class="metric-label" style="color:rgba(255,255,255,.6)">下一餐建议</span><h3 id="nextMealAdvice" style="margin-top:10px">先记录第一顿，建议会随进度更新。</h3></div>
+          <a class="button small" href="ai-food.html" style="background:white;color:var(--ink)">拍照或记一餐 →</a>
+        </article>
+      </div>
+    </section>
+
+    <section class="section card">
+      <div class="section-head"><div><span class="eyebrow">今日餐食</span><h2>已记录 <span id="mealCount">0</span> 餐</h2></div><a class="button ghost small" href="ai-food.html">+ 记一餐</a></div>
+      <div class="meal-log" id="todayMealList" aria-live="polite"><p class="metric-note">还没有餐食记录。</p></div>
+    </section>
+
+    <section class="section grid grid-2">
+      <article class="card accent">
+        <div class="section-head"><div><span class="eyebrow">今日打卡</span><h2>五件小事</h2></div></div>
+        <div class="check-list" id="dailyChecklist">
+          <label class="check-item"><input type="checkbox"><span>总热量约 1500–1600 kcal</span></label>
+          <label class="check-item"><input type="checkbox"><span>蛋白质至少 105 g</span></label>
+          <label class="check-item"><input type="checkbox"><span>走到 7000–8000 步</span></label>
+          <label class="check-item"><input type="checkbox"><span>完成训练或恢复日活动</span></label>
+          <label class="check-item"><input type="checkbox"><span>喝水 1.8–2.5 L</span></label>
+        </div>
+        <div class="check-score"><div class="progress-line" style="flex:1"><span id="checkBar" style="width:0"></span></div><strong id="checkScore" style="margin-left:14px">0 / 5</strong></div>
+      </article>
+      <article class="card peach">
+        <span class="eyebrow">路线图</span><h2>把 8 kg 分成三段</h2>
+        <ol class="mini-list"><li><strong>63 → 60：</strong>稳定执行</li><li><strong>60 → 58：</strong>适度加步数</li><li><strong>58 → 55：</strong>放慢速度，重新评估</li></ol>
+      </article>
+    </section>
+
+    <section class="section" aria-labelledby="explore-title">
+      <div class="section-head"><div><span class="eyebrow">计划地图</span><h2 id="explore-title">按你当下最需要的开始</h2></div></div>
+      <div class="grid grid-3">
+        <a class="card link-card dark" href="ai-food.html"><div class="icon-box">📷</div><h3>AI 拍照识餐</h3><p class="metric-note" style="color:rgba(255,255,255,.65)">上传一张餐食照片，准备营养识别。</p><span class="link-arrow">→</span></a>
+        <a class="card link-card" href="diet.html"><div class="icon-box">🥣</div><h3>饮食安排</h3><p class="metric-note">一日餐次、2+1+1 配餐和热量分配器。</p><span class="link-arrow">→</span></a>
+        <a class="card link-card" href="workout.html"><div class="icon-box">🏋️</div><h3>训练计划</h3><p class="metric-note">根据这周状态切换 3、4 或 5 天版本。</p><span class="link-arrow">→</span></a>
+        <a class="card link-card" href="progress.html"><div class="icon-box">〽️</div><h3>进度记录</h3><p class="metric-note">保存晨重、看 7 日均值和调整建议。</p><span class="link-arrow">→</span></a>
+        <a class="card link-card" href="takeout.html"><div class="icon-box">🥡</div><h3>外卖选择</h3><p class="metric-note">校园外卖点单模板，备注一键复制。</p><span class="link-arrow">→</span></a>
+      </div>
+    </section>
+
+    <section class="section callout"><strong>提醒：</strong>看周均，不看单日。若出现月经紊乱、眩晕或持续疲劳，请暂停减脂并就医。</section>
+  </main>
+
+  <footer class="site-footer"><div class="footer-wrap"><span>刚刚好计划 · 数据只保存在你的浏览器里</span><div class="footer-links"><a href="diet.html">饮食</a><a href="workout.html">训练</a><a href="progress.html">进度</a><a href="takeout.html">外卖</a></div></div></footer>
+</body>
+</html>
