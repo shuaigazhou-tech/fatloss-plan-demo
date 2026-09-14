@@ -4,13 +4,13 @@
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="记录晨重并观察7日平均趋势的减脂进度页面。">
   <title>进度记录｜刚刚好的减脂计划</title>
-  <link rel="stylesheet" href="styles.css"><script defer src="script.js"></script>
+  <link rel="stylesheet" href="styles.css"><script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script><script defer src="script.js"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">跳到主要内容</a>
-  <header class="site-header"><div class="nav-wrap"><a class="brand" href="index.html"><span class="brand-mark">好</span><span>刚刚好计划</span></a><button class="nav-toggle" type="button" aria-expanded="false" aria-controls="siteNav">菜单</button><nav class="site-nav" id="siteNav" aria-label="主导航"><a href="index.html">首页</a><a href="diet.html">饮食</a><a href="workout.html">训练</a><a href="progress.html" aria-current="page">进度</a><a href="takeout.html">外卖</a><a href="ai-food.html">AI 识餐</a></nav></div></header>
+  <header class="site-header"><div class="nav-wrap"><a class="brand" href="index.html"><span class="brand-mark">好</span><span>刚刚好计划</span></a><button class="nav-toggle" type="button" aria-expanded="false" aria-controls="siteNav">菜单</button><nav class="site-nav" id="siteNav" aria-label="主导航"><a href="index.html">首页</a><a href="diet.html">饮食</a><a href="workout.html">训练</a><a href="progress.html" aria-current="page">进度</a><a href="takeout.html">外卖</a><a href="ai-food.html">AI 识餐</a><a href="history.html">记录</a></nav></div></header>
   <main id="main">
-    <section class="hero"><span class="eyebrow">Trend, not noise</span><h1 class="page-title">看趋势，<br>不纠结单日。</h1><p class="lede">晨起空腹称重，数据只留在本机。</p></section>
+    <section class="hero"><span class="eyebrow">Trend, not noise</span><h1 class="page-title">看趋势，<br>不纠结单日。</h1><p class="lede">晨起空腹称重；登录后会自动同步到其他设备。</p></section>
 
     <section class="grid grid-4" aria-label="进度摘要">
       <article class="card metric-card"><span class="metric-label">最新体重</span><strong class="metric-value" id="currentWeight">63.0 kg</strong><span class="metric-note">起点 63 kg</span></article>
@@ -37,6 +37,17 @@
     </section>
 
     <section class="section card accent"><span class="eyebrow">趋势解读</span><h2>现在该怎么做？</h2><p class="insight" id="trendInsight">记录 7 次左右后，这里会用均值帮你过滤单日波动。</p></section>
+
+    <section class="section" aria-labelledby="weeklyTitle">
+      <div class="section-head"><div><span class="eyebrow">过去 7 天</span><h2 id="weeklyTitle">本周复盘</h2></div><span class="chip" id="weeklyRange">最近一周</span></div>
+      <div class="grid grid-4 weekly-metrics">
+        <article class="card metric-card"><span class="metric-label">日均热量</span><strong class="metric-value" id="weeklyCalories">—</strong><span class="metric-note">有记录天数的平均</span></article>
+        <article class="card metric-card"><span class="metric-label">日均蛋白质</span><strong class="metric-value" id="weeklyProtein">—</strong><span class="metric-note">目标 105–120 g</span></article>
+        <article class="card metric-card"><span class="metric-label">体重变化</span><strong class="metric-value" id="weeklyWeightChange">—</strong><span class="metric-note">首末两次记录</span></article>
+        <article class="card metric-card"><span class="metric-label">完成训练</span><strong class="metric-value" id="weeklyWorkouts">0 次</strong><span class="metric-note">过去 7 天</span></article>
+      </div>
+      <article class="card weekly-report"><div><span class="metric-label">本周建议</span><h3 id="weeklyAdvice">记录几天后会生成更准确的复盘。</h3></div><div class="weekly-score"><strong id="weeklyScore">0%</strong><span>记录完整度</span></div></article>
+    </section>
 
     <section class="section" aria-labelledby="rules-title">
       <div class="section-head"><div><span class="eyebrow">调整规则</span><h2 id="rules-title">至少看满 2–3 周再动</h2></div><p>经期、盐分、碳水、睡眠和便秘都可能让体重短期变化 1–2 kg。</p></div>

@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="查看餐食历史、收藏常用餐食并快速复用。">
+  <title>餐食记录｜刚刚好的减脂计划</title>
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script><script defer src="script.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="site-header"><div class="nav-wrap"><a class="brand" href="index.html"><span class="brand-mark">好</span><span>刚刚好计划</span></a><button class="nav-toggle" type="button" aria-expanded="false" aria-controls="siteNav">菜单</button><nav class="site-nav" id="siteNav" aria-label="主导航"><a href="index.html">首页</a><a href="diet.html">饮食</a><a href="workout.html">训练</a><a href="progress.html">进度</a><a href="takeout.html">外卖</a><a href="ai-food.html">AI 识餐</a><a href="history.html" aria-current="page">记录</a></nav></div></header>
+  <main id="main">
+    <section class="hero"><span class="eyebrow">Meal memory</span><h1 class="page-title">吃过什么，<br>下次不用重记。</h1><p class="lede">搜索餐食历史，收藏常吃组合，一键记入今天。</p></section>
+
+    <section class="section card">
+      <div class="section-head"><div><span class="eyebrow">常用餐食</span><h2>一键复用</h2></div><a class="button small" href="ai-food.html">+ 识别新餐食</a></div>
+      <div id="favoriteMealList" class="favorite-grid"><p class="metric-note">还没有收藏。可从历史记录或识餐结果中添加。</p></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><div><span class="eyebrow">餐食历史</span><h2>全部记录</h2></div><span class="chip" id="historyCount">0 条</span></div>
+      <div class="history-filters card"><label class="field">搜索<input id="historySearch" type="search" placeholder="餐食名称或备注"></label><label class="field">餐次<select id="historyType"><option value="全部">全部</option><option>早餐</option><option>午餐</option><option>晚餐</option><option>加餐</option></select></label><label class="field">日期<input id="historyDate" type="date"></label><button class="button ghost" id="clearHistoryFilters" type="button">清除筛选</button></div>
+      <div id="mealHistoryList" class="history-list" aria-live="polite"></div>
+    </section>
+  </main>
+  <footer class="site-footer"><div class="footer-wrap"><span>登录后，餐食历史和收藏会跨设备同步</span><div class="footer-links"><a href="index.html">首页</a><a href="ai-food.html">AI 识餐</a><a href="progress.html">周报</a></div></div></footer>
+</body>
+</html>

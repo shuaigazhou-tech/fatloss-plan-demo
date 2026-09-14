@@ -4,21 +4,24 @@
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="上传餐食照片，使用 AI 估算热量和营养。">
   <title>AI 识餐｜刚刚好的减脂计划</title>
-  <link rel="stylesheet" href="styles.css"><script defer src="script.js"></script>
+  <link rel="stylesheet" href="styles.css"><script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script><script defer src="script.js"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">跳到主要内容</a>
-  <header class="site-header"><div class="nav-wrap"><a class="brand" href="index.html"><span class="brand-mark">好</span><span>刚刚好计划</span></a><button class="nav-toggle" type="button" aria-expanded="false" aria-controls="siteNav">菜单</button><nav class="site-nav" id="siteNav" aria-label="主导航"><a href="index.html">首页</a><a href="diet.html">饮食</a><a href="workout.html">训练</a><a href="progress.html">进度</a><a href="takeout.html">外卖</a><a href="ai-food.html" aria-current="page">AI 识餐</a></nav></div></header>
+  <header class="site-header"><div class="nav-wrap"><a class="brand" href="index.html"><span class="brand-mark">好</span><span>刚刚好计划</span></a><button class="nav-toggle" type="button" aria-expanded="false" aria-controls="siteNav">菜单</button><nav class="site-nav" id="siteNav" aria-label="主导航"><a href="index.html">首页</a><a href="diet.html">饮食</a><a href="workout.html">训练</a><a href="progress.html">进度</a><a href="takeout.html">外卖</a><a href="ai-food.html" aria-current="page">AI 识餐</a><a href="history.html">记录</a></nav></div></header>
   <main id="main">
     <section class="hero"><span class="eyebrow">AI food scan</span><h1 class="page-title">拍一下，<br>看懂这一餐。</h1><p class="lede">上传或拍摄餐食照片，识别食物、份量和营养。</p></section>
 
     <section class="grid grid-2">
       <label class="upload-zone" id="uploadZone" for="foodPhoto">
-        <input id="foodPhoto" type="file" accept="image/*" capture="environment">
+        <input id="foodPhoto" type="file" accept="image/*">
+        <input id="cameraPhoto" type="file" accept="image/*" capture="environment">
         <div class="scan-placeholder" id="scanPlaceholder"><div style="font-size:2.4rem">📷</div><strong>拍照或选择照片</strong><span class="metric-note">常见图片会自动压缩</span></div>
         <img id="foodPreview" alt="待识别的餐食预览" hidden>
       </label>
       <div>
+        <div class="camera-actions"><button class="button" id="cameraAction" type="button">📷 直接拍照</button><button class="button secondary" id="galleryAction" type="button">从相册选择</button></div>
+        <label class="auto-scan"><input id="autoScan" type="checkbox" checked> 选好照片后自动识别</label>
         <article class="card scan-result" id="scanResult" aria-live="polite"><span class="metric-label">识别结果</span><h2>先放一张餐食照片</h2><p class="metric-note">识别后仍可修改份量。</p></article>
         <button class="button" id="scanAction" type="button" disabled style="width:100%;margin-top:12px;opacity:.45">开始 AI 识别</button>
         <div class="callout" style="margin-top:12px">AI 结果仅供参考，确认后才会记入今天。</div>
@@ -30,15 +33,19 @@
       <form class="nutrition-form" id="mealForm">
         <label class="field wide">餐食名称<input id="mealName" type="text" maxlength="40" placeholder="例如：鸡腿饭" required></label>
         <label class="field">餐次<select id="mealType"><option>早餐</option><option selected>午餐</option><option>晚餐</option><option>加餐</option></select></label>
+        <div class="field wide item-editor-wrap"><div class="item-editor-title"><div><strong>食物明细</strong><span class="metric-note">可改名称、份量和营养，也可以增删食物</span></div><button class="button ghost small" id="addMealItem" type="button">+ 添加食物</button></div><div id="mealItemEditor" class="meal-item-editor"></div></div>
         <label class="field">热量（kcal）<input id="mealCalories" type="number" min="0" max="3000" step="1" placeholder="例如 560" required></label>
         <label class="field">蛋白质（g）<input id="mealProtein" type="number" min="0" max="300" step="0.1" placeholder="例如 35" required></label>
         <label class="field">碳水（g）<input id="mealCarbs" type="number" min="0" max="500" step="0.1" placeholder="选填"></label>
         <label class="field">脂肪（g）<input id="mealFat" type="number" min="0" max="300" step="0.1" placeholder="选填"></label>
         <label class="field wide">识别备注<input id="mealNoteInput" type="text" maxlength="80" placeholder="例如：酱汁只吃了一半"></label>
         <button class="button" type="submit">确认并记入今天</button>
+        <button class="button secondary" id="saveAsFavorite" type="button">保存为常用餐食</button>
       </form>
       <div class="hero-actions"><button class="button ghost small" id="copyScanPrompt" type="button">复制识餐提示词</button><a class="button secondary small" href="https://chatgpt.com/" target="_blank" rel="noopener">打开 ChatGPT ↗</a></div>
     </section>
+
+    <section class="section card"><div class="section-head"><div><span class="eyebrow">不用重复识别</span><h2>常用餐食</h2></div><a class="button ghost small" href="history.html">管理全部</a></div><div class="favorite-quick-list" id="favoriteQuickList"><p class="metric-note">收藏常吃餐食后，可以直接记入今天。</p></div></section>
 
     <section class="section"><div class="scan-steps"><div class="scan-step"><strong>拍全餐盘</strong><br><span class="metric-note">光线充足，俯拍更清楚。</span></div><div class="scan-step"><strong>带上参照物</strong><br><span class="metric-note">餐具能帮助判断份量。</span></div><div class="scan-step"><strong>确认再保存</strong><br><span class="metric-note">AI 估算可以手动修正。</span></div></div></section>
   </main>
