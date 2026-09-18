@@ -27,6 +27,32 @@
     }
   };
 
+  const PROFILE_KEY = 'user-profile';
+  const normalizeProfile = value => {
+    if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
+    const currentWeight = Number(value.currentWeight);
+    const targetWeight = Number(value.targetWeight);
+    const height = Number(value.height);
+    const calorieGoal = Number(value.calorieGoal);
+    if (!Number.isFinite(currentWeight) || currentWeight < 30 || currentWeight > 250) return null;
+    if (!Number.isFinite(calorieGoal) || calorieGoal < 1000 || calorieGoal > 4000) return null;
+    return {
+      currentWeight,
+      targetWeight: Number.isFinite(targetWeight) && targetWeight >= 30 && targetWeight <= 250 ? targetWeight : null,
+      height: Number.isFinite(height) && height >= 120 && height <= 220 ? height : null,
+      calorieGoal: Math.round(calorieGoal),
+      startWeight: Number.isFinite(Number(value.startWeight)) ? Number(value.startWeight) : currentWeight,
+      completedAt: value.completedAt || new Date().toISOString()
+    };
+  };
+  const profileFromSession = () => normalizeProfile(currentSession?.user?.user_metadata?.fatloss_profile);
+  const getUserProfile = () => profileFromSession() || normalizeProfile(storage.get(PROFILE_KEY, null));
+  const cacheSessionProfile = () => {
+    const profile = profileFromSession();
+    if (profile) storage.set(PROFILE_KEY, profile);
+    return profile;
+  };
+
   const toggle = $('.nav-toggle');
   const nav = $('.site-nav');
   if (toggle && nav) {
@@ -216,8 +242,22 @@
           <span class="eyebrow">云端已连接</span><h2>数据同步中</h2>
           <p class="account-email" id="accountEmail"></p>
           <div class="sync-panel"><span class="sync-dot"></span><div><strong id="syncStatus">已同步</strong><small>数据在登录设备间保持一致</small></div></div>
-          <div class="dialog-actions"><button class="button" id="syncNowAction" type="button">立即同步</button><button class="button secondary" id="signOutAction" type="button">退出登录</button></div>
+          <div class="dialog-actions"><button class="button" id="syncNowAction" type="button">立即同步</button><button class="button secondary" id="editProfileAction" type="button">个人资料</button><button class="button secondary" id="signOutAction" type="button">退出登录</button></div>
         </div>
+      </dialog>
+      <dialog class="auth-dialog profile-dialog" id="profileDialog" aria-labelledby="profileTitle">
+        <button class="dialog-close" id="closeProfileDialog" type="button" aria-label="关闭">×</button>
+        <span class="eyebrow">第一次使用</span>
+        <h2 id="profileTitle">先认识一下你</h2>
+        <p class="metric-note">这些数据只用于计算你的目标，首页只显示体重和今日热量。</p>
+        <form id="profileForm" class="profile-form">
+          <label class="field">当前体重（kg）<input id="profileCurrentWeight" type="number" inputmode="decimal" min="30" max="250" step="0.1" required placeholder="例如 63"></label>
+          <label class="field">目标体重（kg）<input id="profileTargetWeight" type="number" inputmode="decimal" min="30" max="250" step="0.1" placeholder="选填"></label>
+          <label class="field">身高（cm）<input id="profileHeight" type="number" inputmode="numeric" min="120" max="220" step="1" placeholder="选填"></label>
+          <label class="field">每日热量目标（kcal）<input id="profileCalorieGoal" type="number" inputmode="numeric" min="1000" max="4000" step="10" required placeholder="例如 1550"></label>
+          <button class="button profile-save" type="submit">保存并开始记录</button>
+        </form>
+        <p class="form-message" id="profileMessage" role="status"></p>
       </dialog>`);
   };
 
@@ -231,6 +271,37 @@
     trigger?.classList.toggle('signed-in', signedIn);
     const email = $('#accountEmail');
     if (email) email.textContent = currentSession?.user?.email || '';
+  };
+
+  const latestRecordedWeight = () => {
+    const logs = storage.get('weight-logs', []);
+    if (!Array.isArray(logs) || !logs.length) return null;
+    const latest = [...logs].sort((a, b) => String(a.date).localeCompare(String(b.date))).at(-1);
+    const weight = Number(latest?.weight);
+    return Number.isFinite(weight) ? weight : null;
+  };
+
+  const openProfileEditor = ({ firstTime = false } = {}) => {
+    if (!currentSession?.user) {
+      $('#authDialog')?.showModal();
+      return;
+    }
+    const profile = getUserProfile();
+    const weight = latestRecordedWeight() ?? profile?.currentWeight ?? '';
+    $('#profileTitle').textContent = firstTime ? '先认识一下你' : '更新个人资料';
+    $('#profileCurrentWeight').value = weight;
+    $('#profileTargetWeight').value = profile?.targetWeight ?? '';
+    $('#profileHeight').value = profile?.height ?? '';
+    $('#profileCalorieGoal').value = profile?.calorieGoal ?? '';
+    $('#profileMessage').textContent = '';
+    const dialog = $('#profileDialog');
+    if (dialog && !dialog.open) dialog.showModal();
+  };
+
+  const promptForProfileIfNeeded = () => {
+    if (currentSession?.user && !getUserProfile()) {
+      window.setTimeout(() => openProfileEditor({ firstTime: true }), 180);
+    }
   };
 
   async function syncAllData({ notify = false } = {}) {
@@ -298,9 +369,13 @@
   async function initializeAuth() {
     injectAuthShell();
     const dialog = $('#authDialog');
+    const profileDialog = $('#profileDialog');
     $('#authTrigger')?.addEventListener('click', () => dialog?.showModal());
+    $('#homeSetupProfile')?.addEventListener('click', () => openProfileEditor({ firstTime: !getUserProfile() }));
     $('#closeAuthDialog')?.addEventListener('click', () => dialog?.close());
+    $('#closeProfileDialog')?.addEventListener('click', () => profileDialog?.close());
     dialog?.addEventListener('click', event => { if (event.target === dialog) dialog.close(); });
+    profileDialog?.addEventListener('click', event => { if (event.target === profileDialog) profileDialog.close(); });
 
     if (!window.supabase?.createClient) {
       $('#authTriggerText').textContent = '仅本机';
@@ -309,7 +384,51 @@
     supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
     const { data } = await supabaseClient.auth.getSession();
     currentSession = data.session;
+    cacheSessionProfile();
     updateAuthUI();
+
+    $('#editProfileAction')?.addEventListener('click', () => {
+      dialog?.close();
+      openProfileEditor();
+    });
+    $('#profileForm')?.addEventListener('submit', async event => {
+      event.preventDefault();
+      const message = $('#profileMessage');
+      const currentWeight = Number($('#profileCurrentWeight').value);
+      const calorieGoal = Number($('#profileCalorieGoal').value);
+      const targetWeightValue = Number($('#profileTargetWeight').value);
+      const heightValue = Number($('#profileHeight').value);
+      const previous = getUserProfile();
+      const profile = normalizeProfile({
+        currentWeight,
+        targetWeight: $('#profileTargetWeight').value ? targetWeightValue : null,
+        height: $('#profileHeight').value ? heightValue : null,
+        calorieGoal,
+        startWeight: previous?.startWeight ?? currentWeight,
+        completedAt: previous?.completedAt || new Date().toISOString()
+      });
+      if (!profile) {
+        message.textContent = '请检查体重和每日热量目标是否填写正确。';
+        return;
+      }
+      message.textContent = '正在保存…';
+      const metadata = { ...(currentSession?.user?.user_metadata || {}), fatloss_profile: profile };
+      const { data: updateData, error } = await supabaseClient.auth.updateUser({ data: metadata });
+      if (error) {
+        message.textContent = `保存失败：${error.message}`;
+        return;
+      }
+      if (currentSession && updateData.user) currentSession = { ...currentSession, user: updateData.user };
+      storage.set(PROFILE_KEY, profile);
+      const logs = storage.get('weight-logs', []);
+      const nextLogs = Array.isArray(logs) ? logs.filter(item => item.date !== localDateKey()) : [];
+      nextLogs.push({ date: localDateKey(), weight: profile.currentWeight, updatedAt: new Date().toISOString() });
+      storage.set('weight-logs', nextLogs);
+      updateAuthUI();
+      renderDailyNutrition();
+      profileDialog?.close();
+      toast('资料已保存');
+    });
 
     $('#authForm')?.addEventListener('submit', async event => {
       event.preventDefault();
@@ -340,12 +459,17 @@
     supabaseClient.auth.onAuthStateChange((_event, session) => {
       const changedUser = currentSession?.user?.id !== session?.user?.id;
       currentSession = session;
+      cacheSessionProfile();
       updateAuthUI();
       if (session && changedUser) window.setTimeout(async () => {
         try {
           const changed = await syncAllData({ notify: true });
           dialog?.close();
           if (changed) window.location.reload();
+          else {
+            renderDailyNutrition();
+            promptForProfileIfNeeded();
+          }
         } catch (error) {
           console.error(error);
           setSyncStatus('同步失败', 'warning');
@@ -358,9 +482,14 @@
       try {
         const changed = await syncAllData();
         if (changed) window.location.reload();
+        else {
+          renderDailyNutrition();
+          promptForProfileIfNeeded();
+        }
       } catch (error) {
         console.error(error);
         setSyncStatus('同步失败', 'warning');
+        promptForProfileIfNeeded();
       }
     }
   }
@@ -432,46 +561,25 @@
   const renderDailyNutrition = () => {
     const calorieEl = $('#todayCalories');
     if (!calorieEl) return;
-    const calorieGoal = 1550;
-    const proteinGoal = 110;
+    const profile = getUserProfile();
+    const calorieGoal = profile?.calorieGoal ?? null;
     const meals = getMeals().filter(meal => meal.date === todayKey);
     const calories = Math.round(meals.reduce((sum, meal) => sum + Number(meal.calories || 0), 0));
-    const protein = Math.round(meals.reduce((sum, meal) => sum + Number(meal.protein || 0), 0) * 10) / 10;
-    const caloriePct = Math.round(calories / calorieGoal * 100);
-    const proteinPct = Math.round(protein / proteinGoal * 100);
+    const currentWeight = latestRecordedWeight() ?? profile?.currentWeight ?? null;
+    const balance = calorieGoal === null ? null : calorieGoal - calories;
     calorieEl.textContent = calories;
-    $('#todayProtein').textContent = protein.toFixed(protein % 1 ? 1 : 0);
-    $('#caloriePercent').textContent = `${caloriePct}%`;
-    $('#proteinPercent').textContent = `${proteinPct}%`;
-    $('#calorieBar').style.width = `${Math.min(100, caloriePct)}%`;
-    $('#proteinBar').style.width = `${Math.min(100, proteinPct)}%`;
-    const calorieRemaining = calorieGoal - calories;
-    const proteinRemaining = Math.max(0, proteinGoal - protein);
-    $('#calorieRemain').textContent = calorieRemaining >= 0 ? `今天还可安排约 ${calorieRemaining} kcal` : `比参考值高约 ${Math.abs(calorieRemaining)} kcal`;
-    $('#proteinRemain').textContent = proteinRemaining > 0 ? `今天还差约 ${Math.ceil(proteinRemaining)} g` : '今天的蛋白质目标已完成';
-    $('#mealCount').textContent = meals.length;
+    $('#homeWeight').textContent = currentWeight === null ? '—' : currentWeight.toFixed(1).replace(/\.0$/, '');
+    $('#homeWeightNote').textContent = currentWeight === null ? '登录后录入资料' : '取最近一次体重记录';
+    $('#calorieBalance').textContent = balance === null ? '—' : balance;
+    $('#balanceNote').textContent = balance === null
+      ? '完成资料后自动计算'
+      : balance >= 0 ? `目标 ${calorieGoal} kcal` : `已超出 ${Math.abs(balance)} kcal`;
+    $('#mealCountNote').textContent = meals.length ? `今天已记录 ${meals.length} 餐` : '还没有记录餐食';
     $('#dashboardDate').textContent = `${new Date().getMonth() + 1}月${new Date().getDate()}日`;
-
-    let advice = '先记录第一顿，建议会随进度更新。';
-    if (meals.length && calorieRemaining <= 0) advice = '今天已接近参考上限。下一餐按饥饿程度正常吃，优先清淡蛋白质和蔬菜，不需要补偿性节食。';
-    else if (meals.length && proteinRemaining > 35) advice = `蛋白质还差约 ${Math.ceil(proteinRemaining)} g。下一餐优先鸡肉、牛肉、鱼虾、鸡蛋或豆腐。`;
-    else if (meals.length && calorieRemaining < 400) advice = '剩余热量不多，下一餐选少油蛋白质和两份蔬菜，主食按饥饿程度留小份。';
-    else if (meals.length) advice = '目前节奏刚好。下一餐继续按“蛋白质 + 两份菜 + 一份主食”搭配。';
-    $('#nextMealAdvice').textContent = advice;
-
-    const list = $('#todayMealList');
-    list.innerHTML = meals.length ? meals.map(meal => `
-      <div class="meal-log-row">
-        <div><strong>${escapeHtml(meal.name)}</strong><small>${escapeHtml(meal.type)}${meal.note ? ` · ${escapeHtml(meal.note)}` : ''}</small></div>
-        <div><strong>${Math.round(meal.calories)} kcal</strong><small>${Number(meal.protein).toFixed(1)} g 蛋白质</small></div>
-        <button class="icon-button" type="button" data-delete-meal="${escapeHtml(meal.id)}" aria-label="删除 ${escapeHtml(meal.name)}">删除</button>
-      </div>`).join('') : '<p class="metric-note">还没有餐食记录。拍一张照片或手动填入识别结果吧。</p>';
-    $$('[data-delete-meal]', list).forEach(button => button.addEventListener('click', () => {
-      const updated = getMeals().filter(meal => meal.id !== button.dataset.deleteMeal);
-      storage.set('meal-logs', updated);
-      renderDailyNutrition();
-      toast('餐食已删除');
-    }));
+    const profileEntry = $('#homeSetupProfile');
+    if (profileEntry) profileEntry.textContent = currentSession
+      ? profile ? '修改个人资料' : '完善个人资料'
+      : '登录并设置资料';
   };
   renderDailyNutrition();
 
@@ -581,8 +689,12 @@
       const pad = { l: 42, r: 18, t: 18, b: 34 };
       const visible = logs.slice(-30);
       const values = visible.map(x => x.weight);
-      const min = Math.min(55, ...values) - .8;
-      const max = Math.max(63, ...values) + .8;
+      const profile = getUserProfile();
+      const targetWeight = profile?.targetWeight;
+      const startWeight = profile?.startWeight;
+      const referenceValues = [targetWeight, startWeight, ...values].filter(Number.isFinite);
+      const min = Math.min(...referenceValues) - .8;
+      const max = Math.max(...referenceValues) + .8;
       const x = i => pad.l + (visible.length === 1 ? (w - pad.l - pad.r) / 2 : i * (w - pad.l - pad.r) / (visible.length - 1));
       const y = v => pad.t + (max - v) * (h - pad.t - pad.b) / (max - min);
       ctx.clearRect(0, 0, w, h);
@@ -596,10 +708,12 @@
         ctx.beginPath(); ctx.moveTo(pad.l, yy); ctx.lineTo(w - pad.r, yy); ctx.stroke();
         ctx.fillText(v.toFixed(1), 3, yy + 4);
       }
-      ctx.setLineDash([5, 5]);
-      ctx.strokeStyle = '#edae8e';
-      ctx.beginPath(); ctx.moveTo(pad.l, y(55)); ctx.lineTo(w - pad.r, y(55)); ctx.stroke();
-      ctx.setLineDash([]);
+      if (Number.isFinite(targetWeight)) {
+        ctx.setLineDash([5, 5]);
+        ctx.strokeStyle = '#edae8e';
+        ctx.beginPath(); ctx.moveTo(pad.l, y(targetWeight)); ctx.lineTo(w - pad.r, y(targetWeight)); ctx.stroke();
+        ctx.setLineDash([]);
+      }
       ctx.strokeStyle = '#486758';
       ctx.lineWidth = 3;
       ctx.lineJoin = 'round';
@@ -633,14 +747,23 @@
           render();
         }));
       }
-      const current = logs.at(-1)?.weight ?? 63;
-      const progress = Math.max(0, Math.min(100, ((63 - current) / 8) * 100));
+      const profile = getUserProfile();
+      const current = logs.at(-1)?.weight ?? profile?.currentWeight ?? null;
+      const startWeight = profile?.startWeight ?? current;
+      const targetWeight = profile?.targetWeight ?? null;
+      const totalChange = Number.isFinite(startWeight) && Number.isFinite(targetWeight) ? startWeight - targetWeight : null;
+      const progress = current !== null && totalChange && totalChange > 0
+        ? Math.max(0, Math.min(100, ((startWeight - current) / totalChange) * 100))
+        : null;
       const currentEl = $('#currentWeight');
       const remainEl = $('#remainingWeight');
       const progressEl = $('#weightProgress');
-      if (currentEl) currentEl.textContent = `${current.toFixed(1)} kg`;
-      if (remainEl) remainEl.textContent = `${Math.max(0, current - 55).toFixed(1)} kg`;
-      if (progressEl) progressEl.textContent = `${Math.round(progress)}%`;
+      if (currentEl) currentEl.textContent = current === null ? '—' : `${current.toFixed(1)} kg`;
+      if (remainEl) remainEl.textContent = current === null || targetWeight === null ? '—' : `${Math.max(0, current - targetWeight).toFixed(1)} kg`;
+      if (progressEl) progressEl.textContent = progress === null ? '—' : `${Math.round(progress)}%`;
+      if ($('#startWeightNote')) $('#startWeightNote').textContent = Number.isFinite(startWeight) ? `起点 ${startWeight.toFixed(1)} kg` : '录入资料后开始记录';
+      if ($('#targetWeightNote')) $('#targetWeightNote').textContent = Number.isFinite(targetWeight) ? `目标 ${targetWeight.toFixed(1)} kg` : '可在个人资料中设置';
+      if ($('#weightProgressNote')) $('#weightProgressNote').textContent = Number.isFinite(targetWeight) ? `到 ${targetWeight.toFixed(1)} kg 的进度` : '根据你的目标计算';
 
       const last7 = logs.slice(-7).map(x => x.weight);
       const prev7 = logs.slice(-14, -7).map(x => x.weight);
@@ -667,7 +790,7 @@
       event.preventDefault();
       const date = dateInput.value;
       const weight = Number(weightInput.value);
-      if (!date || !Number.isFinite(weight) || weight < 40 || weight > 100) return;
+      if (!date || !Number.isFinite(weight) || weight < 30 || weight > 250) return;
       logs = logs.filter(x => x.date !== date);
       logs.push({ date, weight });
       logs = logs.map(item => item.date === date ? { ...item, updatedAt: new Date().toISOString() } : item);

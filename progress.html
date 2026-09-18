@@ -13,10 +13,10 @@
     <section class="hero"><span class="eyebrow">Trend, not noise</span><h1 class="page-title">看趋势，<br>不纠结单日。</h1><p class="lede">晨起空腹称重；登录后会自动同步到其他设备。</p></section>
 
     <section class="grid grid-4" aria-label="进度摘要">
-      <article class="card metric-card"><span class="metric-label">最新体重</span><strong class="metric-value" id="currentWeight">63.0 kg</strong><span class="metric-note">起点 63 kg</span></article>
-      <article class="card metric-card"><span class="metric-label">距离目标</span><strong class="metric-value" id="remainingWeight">8.0 kg</strong><span class="metric-note">目标 55 kg</span></article>
+      <article class="card metric-card"><span class="metric-label">最新体重</span><strong class="metric-value" id="currentWeight">—</strong><span class="metric-note" id="startWeightNote">录入资料后开始记录</span></article>
+      <article class="card metric-card"><span class="metric-label">距离目标</span><strong class="metric-value" id="remainingWeight">—</strong><span class="metric-note" id="targetWeightNote">可在个人资料中设置</span></article>
       <article class="card metric-card"><span class="metric-label">最近 7 次均值</span><strong class="metric-value" id="sevenDayAvg">—</strong><span class="metric-note">过滤水分噪音</span></article>
-      <article class="card metric-card"><span class="metric-label">目标完成</span><strong class="metric-value" id="weightProgress">0%</strong><span class="metric-note">到 55 kg 的进度</span></article>
+      <article class="card metric-card"><span class="metric-label">目标完成</span><strong class="metric-value" id="weightProgress">—</strong><span class="metric-note" id="weightProgressNote">根据你的目标计算</span></article>
     </section>
 
     <section class="section grid grid-2">
@@ -24,7 +24,7 @@
         <div class="section-head"><div><span class="eyebrow">晨重记录</span><h2>加一条数据</h2></div></div>
         <form class="form-row" id="weightForm">
           <label class="field">日期<input id="weightDate" type="date" required></label>
-          <label class="field">体重（kg）<input id="weightValue" type="number" min="40" max="100" step="0.1" placeholder="例如 62.6" required></label>
+          <label class="field">体重（kg）<input id="weightValue" type="number" min="30" max="250" step="0.1" placeholder="例如 62.6" required></label>
           <button class="button" type="submit">保存</button>
         </form>
         <p class="metric-note" style="margin-top:12px">同一天再次保存会更新原记录。</p>
